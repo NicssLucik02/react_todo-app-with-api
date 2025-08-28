@@ -12,7 +12,7 @@ export const TodoFooter: React.FC<PropsFooter> = ({
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {`${quantityActiveTasks()} items left`}
+        {`${quantityActiveTasks} items left`}
       </span>
 
       <nav className="filter" data-cy="Filter">
@@ -50,12 +50,11 @@ export const TodoFooter: React.FC<PropsFooter> = ({
         </a>
       </nav>
 
-      {/* this button should be disabled if there are no completed todos */}
       <button
         type="button"
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
-        disabled={quantityActiveTasks() === todos.length}
+        disabled={quantityActiveTasks === todos.length}
         onClick={handleDeleteAllTodos}
       >
         Clear completed

@@ -8,8 +8,7 @@ import { TodoHeader } from '../TodoHeader/TodoHeader';
 import { TodoMain } from '../TodoMain/TodoMain';
 import { TodoFooter } from '../TodoFooter/TodoFooter';
 import { ErrorNotification } from '../ErrorNotification/ErrorNotification';
-
-const USER_ID = 3349;
+import { USER_ID } from '../../types/consts';
 
 export const TodoApp: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,9 +52,7 @@ export const TodoApp: React.FC = () => {
     setActiveFilterStatus(type);
   };
 
-  const quantityActiveTasks = (): number => {
-    return todos.filter(todo => !todo.completed).length;
-  };
+  const quantityActiveTasks = todos.filter(todo => !todo.completed).length;
 
   const handleSearchQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);

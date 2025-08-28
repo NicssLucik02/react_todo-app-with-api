@@ -1,14 +1,12 @@
 import { Todo } from '../types/Todo';
 import { client } from '../utils/fetchClient';
+import { USER_ID } from '../types/consts';
 
-export const USER_ID = 3349;
 
-// https://mate.academy/students-api/todos?userId=3345
 export const getTodos = () => {
   return client.get<Todo[]>(`/todos?userId=${USER_ID}`);
 };
 
-// Add more methods here
 export const addTodos = (data: Todo) => {
   return client.post<Todo>(`/todos`, data);
 };

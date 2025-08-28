@@ -34,7 +34,7 @@ export const TodoInfo = ({
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [ activeEdit, todo.id,todo.title ]);
+  }, [activeEdit, todo.id, todo.title]);
 
   return (
     <div

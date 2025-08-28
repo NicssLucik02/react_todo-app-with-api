@@ -2,7 +2,7 @@ import { FilterStatus } from './enums';
 import { Todo } from './Todo';
 
 export type PropsHeader = {
-  quantityActiveTasks: () => number;
+  quantityActiveTasks: number;
   handleSearchQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchQuery: string | '';
   inputRef: React.RefObject<HTMLInputElement>;
@@ -60,7 +60,7 @@ export type PropsError = {
 
 export type PropsFooter = {
   todos: Todo[];
-  quantityActiveTasks: () => number;
+  quantityActiveTasks: number;
   activeFilterStatus: string;
   handleChangeFilter: (type: FilterStatus) => void;
   handleDeleteAllTodos: () => void;
