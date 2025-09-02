@@ -1,5 +1,5 @@
 import { FilterStatus } from '../types/enums';
-import { Todo } from '../types/Todo';
+import { Todo } from '../types/types';
 
 export const filterTodos = (
   todos: Todo[],

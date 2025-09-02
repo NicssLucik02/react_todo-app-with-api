@@ -1,13 +1,32 @@
-import { PropsMain } from '../../types/Props';
-import { Todo } from '../../types/Todo';
+import { Todo } from '../../types/types';
 import { TodoInfo } from './TodoInfo/TodoInfo';
 
-export const TodoMain: React.FC<PropsMain> = ({
+export type Props = {
+  filteredTodos: Todo[];
+  isLoadingTodos: boolean;
+  isLoadingDelete: number[];
+  isLoadingUpdate: number[];
+  isLoadingEdit: number | null;
+  handleCheckTodo: (id: number) => void;
+  handleDeleteTodos: (todoId: number) => void;
+  handleEditTodo: (todoId: number, editTitle: string) => void;
+  editTodoQuery: string;
+  handleEditTodoQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+  handleActivateEdit: (todoId: number) => void;
+  activeEdit: number | null;
+  setEditTodoQuery: (value: string) => void;
+  setActiveEdit: (todoId: number | null) => void;
+  isLoadingAdd: boolean;
+};
+
+export const TodoList: React.FC<Props> = ({
   filteredTodos,
   isLoadingTodos,
   isLoadingAdd,
   isLoadingDelete,
   isLoadingUpdate,
+  isLoadingEdit,
   handleDeleteTodos,
   handleCheckTodo,
   handleEditTodo,
@@ -18,7 +37,7 @@ export const TodoMain: React.FC<PropsMain> = ({
   activeEdit,
   setEditTodoQuery,
   setActiveEdit,
-}: PropsMain) => {
+}) => {
   return (
     <section className="todoapp__main" data-cy="TodoList">
       {filteredTodos.map((todo: Todo) => {
@@ -40,6 +59,7 @@ export const TodoMain: React.FC<PropsMain> = ({
             isLoadingAdd={isLoadingAdd}
             isLoadingDelete={isLoadingDelete}
             isLoadingUpdate={isLoadingUpdate}
+            isLoadingEdit={isLoadingEdit}
           />
         );
       })}

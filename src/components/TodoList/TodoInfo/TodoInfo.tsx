@@ -1,8 +1,27 @@
 import classNames from 'classnames';
-import { PropsInfo } from '../../../types/Props';
 import { useEffect } from 'react';
+import { Todo } from '../../../types/types';
 
-export const TodoInfo = ({
+export type Props = {
+  todo: Todo;
+  handleCheckTodo: (id: number) => void;
+  handleDeleteTodos: (todoId: number) => void;
+  isLoadingTodos: boolean;
+  isLoadingAdd: boolean;
+  isLoadingDelete: number[];
+  isLoadingUpdate: number[];
+  isLoadingEdit: number | null;
+  handleActivateEdit: () => void;
+  activeEdit: number | null;
+  editTodoQuery: string;
+  handleEditTodoQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+  handleEditTodo: (todoId: number, editTitle: string) => void;
+  setEditTodoQuery: (value: string) => void;
+  setActiveEdit: (todoId: number | null) => void;
+};
+
+export const TodoInfo: React.FC<Props> = ({
   todo,
   handleCheckTodo,
   handleDeleteTodos,
@@ -18,7 +37,8 @@ export const TodoInfo = ({
   isLoadingAdd,
   isLoadingDelete,
   isLoadingUpdate,
-}: PropsInfo) => {
+  isLoadingEdit,
+}) => {
   useEffect(() => {
     if (activeEdit === todo.id && inputRef.current) {
       inputRef.current.focus();
@@ -94,7 +114,8 @@ export const TodoInfo = ({
             isLoadingTodos ||
             (todo.id === 0 && isLoadingAdd) ||
             isLoadingDelete.includes(todo.id) ||
-            isLoadingUpdate.includes(todo.id),
+            isLoadingUpdate.includes(todo.id) ||
+            isLoadingEdit === todo.id,
         })}
       >
         <div className="modal-background has-background-white-ter" />

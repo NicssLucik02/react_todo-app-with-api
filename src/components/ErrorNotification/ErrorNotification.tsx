@@ -1,10 +1,14 @@
 import classNames from 'classnames';
-import { PropsError } from '../../types/Props';
 
-export const ErrorNotification: React.FC<PropsError> = ({
+export type Props = {
+  currentError: string | null;
+  handleHideError: () => void;
+};
+
+export const ErrorNotification: React.FC<Props> = ({
   currentError,
   handleHideError,
-}: PropsError) => {
+}) => {
   return (
     <div
       data-cy="ErrorNotification"

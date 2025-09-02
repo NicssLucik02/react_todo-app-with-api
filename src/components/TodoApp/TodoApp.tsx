@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react';
 import { useTodos } from '../../hooks/useTodos';
 import { FilterStatus } from '../../types/enums';
 import { filterTodos } from '../../utils/filterTodos';
-import { Todo } from '../../types/Todo';
+import { Todo } from '../../types/types';
 import { UserWarning } from '../../UserWarning';
 import { TodoHeader } from '../TodoHeader/TodoHeader';
-import { TodoMain } from '../TodoMain/TodoMain';
+import { TodoList } from '../TodoList/TodoList';
 import { TodoFooter } from '../TodoFooter/TodoFooter';
 import { ErrorNotification } from '../ErrorNotification/ErrorNotification';
-import { USER_ID } from '../../types/consts';
+import { USER_ID } from '../../types/types';
 
 export const TodoApp: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,6 +18,7 @@ export const TodoApp: React.FC = () => {
     isLoadingAdd,
     isLoadingDelete,
     isLoadingUpdate,
+    isLoadingEdit,
     currentError,
     setCurrentError,
     handleAddTodo,
@@ -38,6 +39,8 @@ export const TodoApp: React.FC = () => {
   const [activeFilterStatus, setActiveFilterStatus] = useState<FilterStatus>(
     FilterStatus.All,
   );
+
+  console.log(isLoadingEdit);
 
   const handleHideError = (): void => {
     setCurrentError('');
@@ -80,8 +83,9 @@ export const TodoApp: React.FC = () => {
           todos={todos}
         />
 
-        <TodoMain
+        <TodoList
           isLoadingTodos={isLoadingTodos}
+          isLoadingEdit={isLoadingEdit}
           handleCheckTodo={handleCheckTodo}
           handleDeleteTodos={handleDeleteTodos}
           filteredTodos={

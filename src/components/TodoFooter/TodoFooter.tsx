@@ -1,14 +1,22 @@
 import classNames from 'classnames';
 import { FilterStatus } from '../../types/enums';
-import { PropsFooter } from '../../types/Props';
+import { Todo } from '../../types/types';
 
-export const TodoFooter: React.FC<PropsFooter> = ({
+export type Props = {
+  todos: Todo[];
+  quantityActiveTasks: number;
+  activeFilterStatus: string;
+  handleChangeFilter: (type: FilterStatus) => void;
+  handleDeleteAllTodos: (todos: Todo[]) => void;
+};
+
+export const TodoFooter: React.FC<Props> = ({
   todos,
   quantityActiveTasks,
   activeFilterStatus,
   handleChangeFilter,
   handleDeleteAllTodos,
-}: PropsFooter) => {
+}) => {
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
@@ -55,7 +63,7 @@ export const TodoFooter: React.FC<PropsFooter> = ({
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
         disabled={quantityActiveTasks === todos.length}
-        onClick={handleDeleteAllTodos}
+        onClick={() => handleDeleteAllTodos(todos)}
       >
         Clear completed
       </button>

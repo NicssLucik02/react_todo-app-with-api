@@ -1,7 +1,23 @@
 import classNames from 'classnames';
-import { PropsHeader } from '../../types/Props';
+import { Todo } from '../../types/types';
 
-export const TodoHeader: React.FC<PropsHeader> = ({
+export type Props = {
+  quantityActiveTasks: number;
+  handleSearchQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchQuery: string | '';
+  inputRef: React.RefObject<HTMLInputElement>;
+  setSearchQuery: (value: string) => void;
+  isLoadingTodos: boolean;
+  isLoadingAdd: boolean;
+  handleAddTodo: (
+    title: string,
+    setSearchQuery: (value: string) => void,
+  ) => void;
+  handleToggleAll: () => void;
+  todos: Todo[];
+};
+
+export const TodoHeader: React.FC<Props> = ({
   quantityActiveTasks,
   handleSearchQuery,
   searchQuery,
@@ -12,7 +28,7 @@ export const TodoHeader: React.FC<PropsHeader> = ({
   isLoadingAdd,
   handleToggleAll,
   todos,
-}: PropsHeader) => {
+}) => {
   return (
     <header className="todoapp__header">
       {!isLoadingTodos && todos.length > 0 && (
