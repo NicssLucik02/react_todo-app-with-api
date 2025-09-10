@@ -7,7 +7,7 @@ export type Props = {
   quantityActiveTasks: number;
   activeFilterStatus: string;
   handleChangeFilter: (type: FilterStatus) => void;
-  handleDeleteAllTodos: (todos: Todo[]) => void;
+  handleDeleteAllTodos: () => void;
 };
 
 export const TodoFooter: React.FC<Props> = ({
@@ -63,7 +63,7 @@ export const TodoFooter: React.FC<Props> = ({
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
         disabled={quantityActiveTasks === todos.length}
-        onClick={() => handleDeleteAllTodos(todos)}
+        onClick={() => handleDeleteAllTodos()}
       >
         Clear completed
       </button>

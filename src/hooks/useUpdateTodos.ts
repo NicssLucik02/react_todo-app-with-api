@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Todo } from '../types/types';
 import { updateTodos } from '../api/todos';
 import { ErrorMessages } from '../types/enums';
@@ -7,12 +7,11 @@ export const useUpdateTodos = (
   todos: Todo[],
   setTodos: Dispatch<SetStateAction<Todo[]>>,
   setCurrentError: Dispatch<SetStateAction<ErrorMessages | ''>>,
-  setIsLoadingTodos: Dispatch<SetStateAction<boolean>>,
+  setLoadingTodos: Dispatch<SetStateAction<number[]>>,
 ) => {
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState<number[]>([]);
-
   const handleCheckTodo = async (todoId: number) => {
-    setIsLoadingUpdate(prev => [...prev, todoId]);
+    setLoadingTodos(prev => [...prev, todoId]);
+
     try {
       const todoToUpdate = todos.find(todo => todo.id === todoId);
 
@@ -31,13 +30,13 @@ export const useUpdateTodos = (
     } catch (error) {
       setCurrentError(ErrorMessages.Update);
     } finally {
-      setIsLoadingUpdate(prev => prev.filter(id => id !== todoId));
+      setLoadingTodos(prev => {
+        return prev.filter(id => id !== todoId);
+      });
     }
   };
 
   const handleToggleAll = async () => {
-    setIsLoadingTodos(true);
-
     try {
       const allCompleted = todos.every(todo => todo.completed);
 
@@ -48,13 +47,10 @@ export const useUpdateTodos = (
       );
     } catch (error) {
       setCurrentError(ErrorMessages.Update);
-    } finally {
-      setIsLoadingTodos(false);
     }
   };
 
   return {
-    isLoadingUpdate,
     handleCheckTodo,
     handleToggleAll,
   };

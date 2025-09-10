@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Todo } from '../../../types/types';
@@ -6,55 +7,48 @@ export type Props = {
   todo: Todo;
   handleCheckTodo: (id: number) => void;
   handleDeleteTodos: (todoId: number) => void;
-  isLoadingTodos: boolean;
-  isLoadingAdd: boolean;
-  isLoadingDelete: number[];
-  isLoadingUpdate: number[];
-  isLoadingEdit: number | null;
-  handleActivateEdit: () => void;
-  activeEdit: number | null;
-  editTodoQuery: string;
-  handleEditTodoQuery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  activeTodoEdit: number | null;
+  editTodoTitle: string;
   inputRef: React.RefObject<HTMLInputElement>;
   handleEditTodo: (todoId: number, editTitle: string) => void;
-  setEditTodoQuery: (value: string) => void;
-  setActiveEdit: (todoId: number | null) => void;
+  setEditTodoTitle: (value: string) => void;
+  setActiveTodoEdit: (todoId: number | null) => void;
+  loadingTodos: number[];
 };
 
 export const TodoInfo: React.FC<Props> = ({
   todo,
   handleCheckTodo,
   handleDeleteTodos,
-  isLoadingTodos,
-  handleActivateEdit,
-  activeEdit,
-  editTodoQuery,
-  handleEditTodoQuery,
-  handleEditTodo,
+  editTodoTitle,
   inputRef,
-  setEditTodoQuery,
-  setActiveEdit,
-  isLoadingAdd,
-  isLoadingDelete,
-  isLoadingUpdate,
-  isLoadingEdit,
+  handleEditTodo,
+  setEditTodoTitle,
+  loadingTodos,
+  activeTodoEdit,
+  setActiveTodoEdit,
 }) => {
   useEffect(() => {
-    if (activeEdit === todo.id && inputRef.current) {
+    if (activeTodoEdit === todo.id && inputRef.current) {
       inputRef.current.focus();
-      setEditTodoQuery(todo.title);
+      setEditTodoTitle(todo.title);
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && activeEdit === todo.id) {
-        setActiveEdit(null);
+      if (e.key === 'Escape' && activeTodoEdit === todo.id) {
+        setActiveTodoEdit(null);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeEdit, todo.id, todo.title]);
+  }, [activeTodoEdit, todo.id, todo.title]);
+
+  const handleActivateEdit = () => {
+    setActiveTodoEdit(todo.id);
+    setEditTodoTitle(todo.title);
+  };
 
   return (
     <div
@@ -72,7 +66,7 @@ export const TodoInfo: React.FC<Props> = ({
         />
       </label>
 
-      {activeEdit !== todo.id ? (
+      {activeTodoEdit !== todo.id ? (
         <>
           <span data-cy="TodoTitle" className="todo__title">
             {todo.title}
@@ -91,7 +85,7 @@ export const TodoInfo: React.FC<Props> = ({
         <form
           onSubmit={event => {
             event.preventDefault();
-            handleEditTodo(todo.id, editTodoQuery);
+            handleEditTodo(todo.id, editTodoTitle);
           }}
         >
           <input
@@ -100,9 +94,9 @@ export const TodoInfo: React.FC<Props> = ({
             type="text"
             className="todo__title-field"
             placeholder="Empty todo will be deleted"
-            value={editTodoQuery}
-            onChange={handleEditTodoQuery}
-            onBlur={() => handleEditTodo(todo.id, editTodoQuery)}
+            value={editTodoTitle}
+            onChange={event => setEditTodoTitle(event.target.value)}
+            onBlur={() => handleEditTodo(todo.id, editTodoTitle)}
           />
         </form>
       )}
@@ -110,12 +104,7 @@ export const TodoInfo: React.FC<Props> = ({
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
-          'is-active':
-            isLoadingTodos ||
-            (todo.id === 0 && isLoadingAdd) ||
-            isLoadingDelete.includes(todo.id) ||
-            isLoadingUpdate.includes(todo.id) ||
-            isLoadingEdit === todo.id,
+          'is-active': loadingTodos.includes(todo.id),
         })}
       >
         <div className="modal-background has-background-white-ter" />

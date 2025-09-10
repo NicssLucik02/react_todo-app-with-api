@@ -7,14 +7,13 @@ export type Props = {
   searchQuery: string | '';
   inputRef: React.RefObject<HTMLInputElement>;
   setSearchQuery: (value: string) => void;
-  isLoadingTodos: boolean;
-  isLoadingAdd: boolean;
   handleAddTodo: (
     title: string,
     setSearchQuery: (value: string) => void,
   ) => void;
   handleToggleAll: () => void;
   todos: Todo[];
+  loadingTodos: number[];
 };
 
 export const TodoHeader: React.FC<Props> = ({
@@ -24,14 +23,14 @@ export const TodoHeader: React.FC<Props> = ({
   handleAddTodo,
   inputRef,
   setSearchQuery,
-  isLoadingTodos,
-  isLoadingAdd,
+  loadingTodos,
   handleToggleAll,
   todos,
 }) => {
   return (
     <header className="todoapp__header">
-      {!isLoadingTodos && todos.length > 0 && (
+      {/* ? */}
+      {todos.length > 0 && (
         <button
           type="button"
           className={classNames('todoapp__toggle-all', {
@@ -56,7 +55,7 @@ export const TodoHeader: React.FC<Props> = ({
           placeholder="What needs to be done?"
           value={searchQuery}
           onChange={handleSearchQuery}
-          disabled={isLoadingAdd}
+          disabled={loadingTodos.length > 0}
         />
       </form>
     </header>

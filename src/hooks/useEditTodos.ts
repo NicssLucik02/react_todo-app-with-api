@@ -8,13 +8,13 @@ export const useEditTodos = (
   setTodos: Dispatch<SetStateAction<Todo[]>>,
   setCurrentError: (error: ErrorMessages | '') => void,
   todos: Todo[],
+  setLoadingTodos: Dispatch<SetStateAction<number[]>>,
 ) => {
-  const [editTodoQuery, setEditTodoQuery] = useState('');
-  const [activeEdit, setActiveEdit] = useState<number | null>(null);
-  const [isLoadingEdit, setIsLoadingEdit] = useState<number | null>(null);
+  const [editTodoTitle, setEditTodoTitle] = useState('');
+  const [activeTodoEdit, setActiveTodoEdit] = useState<number | null>(null);
 
   const handleEditTodo = async (todoId: number, editTitle: string) => {
-    setIsLoadingEdit(todoId);
+    setLoadingTodos(prev => [...prev, todoId]);
 
     try {
       const todoToUpdate = todos.find(todo => todo.id === todoId);
@@ -24,7 +24,7 @@ export const useEditTodos = (
       }
 
       if (todoToUpdate.title === editTitle.trim()) {
-        setActiveEdit(null);
+        setActiveTodoEdit(null);
 
         return;
       }
@@ -43,40 +43,21 @@ export const useEditTodos = (
           todo.id === todoId ? { ...todo, title: editTitle.trim() } : todo,
         ),
       );
-      setActiveEdit(null);
+      setActiveTodoEdit(null);
     } catch (error) {
       setCurrentError(ErrorMessages.Update);
     } finally {
-      setIsLoadingEdit(null);
+      setLoadingTodos(prev => {
+        return prev.filter(id => id !== todoId);
+      });
     }
-  };
-
-  const handleEditTodoQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditTodoQuery(event.target.value);
-  };
-
-  const defaultEditInputValue = (todoId: number) => {
-    const data = todos.find(todo => todo.id === todoId);
-
-    if (data) {
-      setEditTodoQuery(data.title);
-    }
-  };
-
-  const handleActivateEdit = (todoId: number) => {
-    setActiveEdit(todoId);
-    defaultEditInputValue(todoId);
   };
 
   return {
-    isLoadingEdit,
     handleEditTodo,
-    editTodoQuery,
-    handleEditTodoQuery,
-    defaultEditInputValue,
-    handleActivateEdit,
-    activeEdit,
-    setActiveEdit,
-    setEditTodoQuery,
+    editTodoTitle,
+    activeTodoEdit,
+    setActiveTodoEdit,
+    setEditTodoTitle,
   };
 };

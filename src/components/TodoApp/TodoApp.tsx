@@ -1,26 +1,23 @@
-import { useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useTodos } from '../../hooks/useTodos';
-import { FilterStatus } from '../../types/enums';
+import { ErrorMessages, FilterStatus } from '../../types/enums';
 import { filterTodos } from '../../utils/filterTodos';
 import { Todo } from '../../types/types';
 import { UserWarning } from '../../UserWarning';
 import { TodoHeader } from '../TodoHeader/TodoHeader';
 import { TodoList } from '../TodoList/TodoList';
 import { TodoFooter } from '../TodoFooter/TodoFooter';
-import { ErrorNotification } from '../ErrorNotification/ErrorNotification';
 import { USER_ID } from '../../types/types';
 
-export const TodoApp: React.FC = () => {
+type Props = {
+  setCurrentError: Dispatch<SetStateAction<ErrorMessages | ''>>;
+};
+
+export const TodoApp: React.FC<Props> = ({ setCurrentError }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const {
     todos,
-    isLoadingTodos,
-    isLoadingAdd,
-    isLoadingDelete,
-    isLoadingUpdate,
-    isLoadingEdit,
-    currentError,
-    setCurrentError,
+    loadingTodos,
     handleAddTodo,
     inputRef,
     tempTodo,
@@ -29,22 +26,14 @@ export const TodoApp: React.FC = () => {
     handleCheckTodo,
     handleToggleAll,
     handleEditTodo,
-    editTodoQuery,
-    handleEditTodoQuery,
-    handleActivateEdit,
-    activeEdit,
-    setEditTodoQuery,
-    setActiveEdit,
-  } = useTodos();
+    editTodoTitle,
+    setEditTodoTitle,
+    activeTodoEdit,
+    setActiveTodoEdit,
+  } = useTodos(setCurrentError);
   const [activeFilterStatus, setActiveFilterStatus] = useState<FilterStatus>(
     FilterStatus.All,
   );
-
-  console.log(isLoadingEdit);
-
-  const handleHideError = (): void => {
-    setCurrentError('');
-  };
 
   const filteredTodos: Todo[] = useMemo(
     () => filterTodos(todos, activeFilterStatus),
@@ -77,31 +66,24 @@ export const TodoApp: React.FC = () => {
           setSearchQuery={setSearchQuery}
           handleAddTodo={handleAddTodo}
           inputRef={inputRef}
-          isLoadingTodos={isLoadingTodos}
-          isLoadingAdd={isLoadingAdd}
+          loadingTodos={loadingTodos}
           handleToggleAll={handleToggleAll}
           todos={todos}
         />
 
         <TodoList
-          isLoadingTodos={isLoadingTodos}
-          isLoadingEdit={isLoadingEdit}
+          loadingTodos={loadingTodos}
           handleCheckTodo={handleCheckTodo}
           handleDeleteTodos={handleDeleteTodos}
           filteredTodos={
             tempTodo ? [...filteredTodos, tempTodo] : filteredTodos
           }
           handleEditTodo={handleEditTodo}
-          editTodoQuery={editTodoQuery}
-          handleEditTodoQuery={handleEditTodoQuery}
+          editTodoTitle={editTodoTitle}
           inputRef={inputRef}
-          handleActivateEdit={handleActivateEdit}
-          activeEdit={activeEdit}
-          setEditTodoQuery={setEditTodoQuery}
-          setActiveEdit={setActiveEdit}
-          isLoadingAdd={isLoadingAdd}
-          isLoadingDelete={isLoadingDelete}
-          isLoadingUpdate={isLoadingUpdate}
+          activeTodoEdit={activeTodoEdit}
+          setEditTodoTitle={setEditTodoTitle}
+          setActiveTodoEdit={setActiveTodoEdit}
         />
 
         {todos.length > 0 && (
@@ -114,11 +96,6 @@ export const TodoApp: React.FC = () => {
           />
         )}
       </div>
-
-      <ErrorNotification
-        currentError={currentError}
-        handleHideError={handleHideError}
-      />
     </div>
   );
 };

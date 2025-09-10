@@ -7,9 +7,9 @@ export const useAddTodos = (
   setCurrentError: Dispatch<SetStateAction<ErrorMessages | ''>>,
   setTodos: Dispatch<SetStateAction<Todo[]>>,
   inputRef: RefObject<HTMLInputElement>,
+  setLoadingTodos: Dispatch<SetStateAction<number[]>>,
 ) => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [isLoadingAdd, setIsLoadingAdd] = useState<boolean>(false);
 
   const handleAddTodo = async (
     title: string,
@@ -28,7 +28,7 @@ export const useAddTodos = (
       return;
     }
 
-    setIsLoadingAdd(true);
+    setLoadingTodos(prev => [...prev, newTodo.id]);
     setTempTodo(newTodo);
     try {
       const result = await addTodos(newTodo);
@@ -41,12 +41,14 @@ export const useAddTodos = (
       setCurrentError(ErrorMessages.Add);
       setTempTodo(null);
     } finally {
-      setIsLoadingAdd(false);
+      setLoadingTodos(prev => {
+        return prev.filter(id => id !== newTodo.id);
+      });
       if (inputRef.current && !inputRef.current.disabled) {
         inputRef.current.focus();
       }
     }
   };
 
-  return { isLoadingAdd, tempTodo, handleAddTodo, setTempTodo };
+  return { tempTodo, handleAddTodo, setTempTodo };
 };
